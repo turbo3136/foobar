@@ -17,76 +17,81 @@ def answer(map):
     size = [len(map), len(map[0])]          # map size for loops
     x = 0
     y = 1
-    new_node = []
 
-    # create the queue and the queue wall
+    # create the queue, the queue wall, and queue step
+    # q_wall tells us whether the path has been through a wall already
+    # q_step will provide our return value, the number of steps the path took
     q = [start]
     q_wall = [0]
+    q_step = [0]
 
-    # create two matrices the size of map and initialize with 0's
-    # we'll use these to track if we've been to a node and if it's with a path thru a wall
+
+    # create a matrix the size of map and initialize with 0's
+    # we'll use it to track if we've been to a node and if it's with a path thru a wall
     visited = [[0 for j in range(size[y])] for i in range(size[x])]
-    visited_wall = [[0 for j in range(size[y])] for i in range(size[x])]
 
-    # visited[0] will be the list of node and is_wall_path flag
-    # e.g. for the start, visited[0] == [[0, 0], 0]
-    # visited[0][0] == node == [0, 0] and visited[0][1] == is_wall_path == 0
-    # if is_wall_path == 0, we don't look at it bc a shorter path that
-    # hasn't removed walls has already been there before
-    # visited.append([[0, 0], 0])
-    # print visited[0]
+    """here's the beginning of the loop"""
+    n = 0
+    while n < 100:
 
-    # """here's the beginning of the loop"""
-    #
-    # # start with the current node and look to see which adjacent nodes are open.
-    # # Put those nodes in the queue and visited.append([node, is_wall_path])
-    # l = q.pop(0)
-    # node = l[0][0]
-    # is_wall_path = l[0][1]
-    # visited.append([node, is_wall_path])
-    # print visited
-    # # print is_wall_path
-    #
-    # # if we're at the end of the maze, return the path
-    # if node == end:
-    #     return node
-    #
-    # # look for all adjacent cells
-    # for i in [-1, 1]:
-    #     # if we're not moving past the left or right edge, look at the cell
-    #     if 0 <= node[x] + i < size[x]:
-    #         new_node = [node[x] + i, node[y]]
-    #         print new_node
-    #         print map[new_node[x]][new_node[y]]
-    #
-    #         # if we haven't visited this node before or the old is_wall_path == 1
-    #         # and the new is_wall_path == 0, run checks on the new cell
-    #         # if new_node in visited[0]
-    #
-    #         # if the new cell == 0 or is a wall but is_wall_path = 0,
-    #         # then add the cell to the queue
-    #         if map[new_node[x]][new_node[y]] == 0:
-    #             q.append([[new_node[x], new_node[y]], is_wall_path])
-    #             print q
-    #         elif is_wall_path == 0:
-    #             q.append([[new_node[x], new_node[y]], 1])
-    #             print q
-    #
-    #     # if we're not moving past the top or bottom edge, look at the cell
-    #     if 0 <= node[y] + i < size[y]:
-    #         new_node = [node[x], node[y] + i]
-    #         print new_node
-    #         print map[new_node[x]][new_node[y]]
-    #
-    #         # same check as above
-    #         if map[new_node[x]][new_node[y]] == 0:
-    #             q.append([[new_node[x], new_node[y]], is_wall_path])
-    #             print q
-    #         elif is_wall_path == 0:
-    #             q.append([[new_node[x], new_node[y]], 1])
-    #             print q
-    #
-    # """and the end of the loop"""
+        # start with the current node and set visited[node[x]][node[y]] = 2 if is_wall_path = 0, else 1
+        # Look to see which adjacent nodes are open, based on whether we've been thru a wall or not.
+        # Put the open nodes in the queue
+        # (it's open if is_wall_path == 0 or map[node[x]][node[y]] == 0)
+        node = q.pop(0)
+        is_wall_path = q_wall.pop(0)
+        step = q_step.pop(0)
+
+        if is_wall_path == 0:
+            visited[node[x]][node[y]] = 2
+        else:
+            visited[node[x]][node[y]] = 1
+
+        # if we're at the end of the maze, return the path
+        if node == end:
+            return step + 1
+
+        # look for all adjacent cells
+        for i in [-1, 1]:
+            # if we're not moving past the left or right edge, look at the cell
+            if 0 <= node[x] + i < size[x]:
+                new_node = [node[x] + i, node[y]]
+                print 'step ' + str(n) + 'x:\t' + str(new_node) + '\t' + str(map[new_node[x]][new_node[y]])
+
+                # if is_wall_path + map + visited < 2, then we'll put that in the queue
+                # and set q_wall.append(is_wall_path + map)
+                if is_wall_path + map[new_node[x]][new_node[y]] + visited[new_node[x]][new_node[y]] < 2:
+                    q.append(new_node)
+                    q_wall.append(is_wall_path + map[new_node[x]][new_node[y]])
+                    q_step.append(step + 1)
+                    print '\t\t\t' + str(q)
+                    print '\t\t\t' + str(q_wall)
+                    print '\t\t\t' + str(q_step)
+
+            # if we're not moving past the top or bottom edge, look at the cell
+            if 0 <= node[y] + i < size[y]:
+                new_node = [node[x], node[y] + i]
+                print 'step ' + str(n) + 'y:\t' + str(new_node) + '\t' + str(map[new_node[x]][new_node[y]])
+
+                # same logic as above
+                if is_wall_path + map[new_node[x]][new_node[y]] + visited[new_node[x]][new_node[y]] < 2:
+                    q.append(new_node)
+                    q_wall.append(is_wall_path + map[new_node[x]][new_node[y]])
+                    q_step.append(step + 1)
+                    print '\t\t\t' + str(q)
+                    print '\t\t\t' + str(q_wall)
+                    print '\t\t\t' + str(q_step)
+
+        # print visited for visualization
+        for j in range(size[y]):
+            s = ''
+            for i in range(size[x]):
+                s += str(visited[i][j]) + '\t'
+            print s
+        print
+
+        n += 1
+    """and the end of the loop"""
 
 
     # print visited for visualization
@@ -98,12 +103,12 @@ def answer(map):
     print
 
     # print visited_wall for visualization
-    for j in range(size[y]):
-        s = ''
-        for i in range(size[x]):
-            s += str(visited_wall[i][j]) + '\t'
-        print s
-    print
+    # for j in range(size[y]):
+    #     s = ''
+    #     for i in range(size[x]):
+    #         s += str(visited_wall[i][j]) + '\t'
+    #     print s
+    # print
 
     # print the map for visualization
     for j in range(size[y]):
@@ -113,5 +118,5 @@ def answer(map):
         print s
 
 
-answer([[0, 1, 1, 0], [0, 0, 0, 1], [1, 1, 0, 0], [1, 1, 1, 0]])
-# answer([[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
+# print answer([[0, 1, 1, 0], [0, 0, 0, 1], [1, 1, 0, 0], [1, 1, 1, 0]])
+print answer([[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
