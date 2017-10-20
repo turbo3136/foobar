@@ -54,7 +54,7 @@ def answer(maze):
             return step + 1
 
         # look for all adjacent cells
-        for i in [-1, 1]:
+        for i in [1, -1]:
             # if we're not moving past the left or right edge, look at the cell
             if 0 <= node[x] + i < size[x]:
                 new_node = [node[x] + i, node[y]]
