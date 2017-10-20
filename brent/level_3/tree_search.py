@@ -19,11 +19,15 @@ def answer(map):
     y = 1
     new_node = []
 
-    # create the queue
-    q = [[[start, 0]]]
+    # create the queue and the queue wall
+    q = [start]
+    q_wall = [0]
 
-    # create the visited list
-    visited = []
+    # create two matrices the size of map and initialize with 0's
+    # we'll use these to track if we've been to a node and if it's with a path thru a wall
+    visited = [[0 for j in range(size[y])] for i in range(size[x])]
+    visited_wall = [[0 for j in range(size[y])] for i in range(size[x])]
+
     # visited[0] will be the list of node and is_wall_path flag
     # e.g. for the start, visited[0] == [[0, 0], 0]
     # visited[0][0] == node == [0, 0] and visited[0][1] == is_wall_path == 0
@@ -32,50 +36,74 @@ def answer(map):
     # visited.append([[0, 0], 0])
     # print visited[0]
 
-    """here's the beginning of the loop"""
+    # """here's the beginning of the loop"""
+    #
+    # # start with the current node and look to see which adjacent nodes are open.
+    # # Put those nodes in the queue and visited.append([node, is_wall_path])
+    # l = q.pop(0)
+    # node = l[0][0]
+    # is_wall_path = l[0][1]
+    # visited.append([node, is_wall_path])
+    # print visited
+    # # print is_wall_path
+    #
+    # # if we're at the end of the maze, return the path
+    # if node == end:
+    #     return node
+    #
+    # # look for all adjacent cells
+    # for i in [-1, 1]:
+    #     # if we're not moving past the left or right edge, look at the cell
+    #     if 0 <= node[x] + i < size[x]:
+    #         new_node = [node[x] + i, node[y]]
+    #         print new_node
+    #         print map[new_node[x]][new_node[y]]
+    #
+    #         # if we haven't visited this node before or the old is_wall_path == 1
+    #         # and the new is_wall_path == 0, run checks on the new cell
+    #         # if new_node in visited[0]
+    #
+    #         # if the new cell == 0 or is a wall but is_wall_path = 0,
+    #         # then add the cell to the queue
+    #         if map[new_node[x]][new_node[y]] == 0:
+    #             q.append([[new_node[x], new_node[y]], is_wall_path])
+    #             print q
+    #         elif is_wall_path == 0:
+    #             q.append([[new_node[x], new_node[y]], 1])
+    #             print q
+    #
+    #     # if we're not moving past the top or bottom edge, look at the cell
+    #     if 0 <= node[y] + i < size[y]:
+    #         new_node = [node[x], node[y] + i]
+    #         print new_node
+    #         print map[new_node[x]][new_node[y]]
+    #
+    #         # same check as above
+    #         if map[new_node[x]][new_node[y]] == 0:
+    #             q.append([[new_node[x], new_node[y]], is_wall_path])
+    #             print q
+    #         elif is_wall_path == 0:
+    #             q.append([[new_node[x], new_node[y]], 1])
+    #             print q
+    #
+    # """and the end of the loop"""
 
-    # start with the current node and look to see which adjacent nodes are open.
-    # Put those nodes in the queue and visited.append(node, is_wall_path)
-    l = q.pop(0)
-    node = l[0][0]
-    is_wall_path = l[0][1]
-    # print node
-    # print is_wall_path
 
-    # if we're at the end of the maze, return the path
-    if node == end:
-        return path
+    # print visited for visualization
+    for j in range(size[y]):
+        s = ''
+        for i in range(size[x]):
+            s += str(visited[i][j]) + '\t'
+        print s
+    print
 
-    # look for all adjacent cells
-    for i in [-1, 1]:
-        # if we're not moving past the left or right edge, look at the cell
-        if 0 <= node[x] + i < size[x]:
-            new_node = [node[x] + i, node[y]]
-            print new_node
-            print map[new_node[x]][new_node[y]]
-            # if the new cell == 0 or is a wall but is_wall_path = 0,
-            # then add the cell to the queue
-            if map[new_node[x]][new_node[y]] == 0:
-                q.append([[new_node[x], new_node[y]], is_wall_path])
-                print q
-            elif is_wall_path == 0:
-                q.append([[new_node[x], new_node[y]], 1])
-                print q
-        # if we're not moving past the top or bottom edge, look at the cell
-        if 0 <= node[y] + i < size[y]:
-            new_node = [node[x], node[y] + i]
-            print new_node
-            print map[new_node[x]][new_node[y]]
-            # same check as above
-            if map[new_node[x]][new_node[y]] == 0:
-                q.append([[new_node[x], new_node[y]], is_wall_path])
-                print q
-            elif is_wall_path == 0:
-                q.append([[new_node[x], new_node[y]], 1])
-                print q
-
-    """and the end of the loop"""
-
+    # print visited_wall for visualization
+    for j in range(size[y]):
+        s = ''
+        for i in range(size[x]):
+            s += str(visited_wall[i][j]) + '\t'
+        print s
+    print
 
     # print the map for visualization
     for j in range(size[y]):
