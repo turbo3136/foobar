@@ -30,7 +30,7 @@ def dfs(maze, x_pos, y_pos, visited, is_wall_path):
     else:
         visited[x_pos][y_pos] = 1
 
-    solution_size = 9999
+    solution_size = 999999
 
     # East
     check = valid_step(maze, x_pos + 1, y_pos, visited, is_wall_path)
@@ -73,10 +73,51 @@ def answer(maze):
 
     return ret
 
+import numpy as np
+import itertools
+
+def generate_mazes():
+    x = 6
+    y = 2
+    max = 1000000
+    # max = 999999
+
+    arr = [np.reshape(np.array(i), (x, y)) for i in itertools.product([0, 1], repeat=x * y)]
+
+    for n in range(len(arr)):
+        maze = arr[n].tolist()
+        maze[0][0] = 0
+        maze[x - 1][y - 1] = 0
+        maze1 = map(list, zip(*maze))
+        check = answer(maze)
+        check1 = answer(maze1)
+        if check != check1:
+            print str(check) + '\t' + str(check1) + ' OHHH NOOOOOOOO'
+            print maze1
+
+            # print the maze
+            for j in range(y):
+                s = ''
+                for i in range(x):
+                    s += str(maze[i][j]) + '\t'
+                print s
+            print
+
+            # print the maze1
+            for j in range(x):
+                s = ''
+                for i in range(y):
+                    s += str(maze1[i][j]) + '\t'
+                print s
+            print
 
 # print answer([[0, 0, 0, 0], [0, 0, 0, 0]])
-print answer([[0, 1, 1, 0], [0, 0, 0, 1], [1, 1, 0, 0], [1, 1, 1, 0]])
-# print answer([[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
+# print answer([[0, 0, 0, 0], [0, 1, 1, 1], [0, 1, 1, 1], [0, 1, 1, 0]])
+# print answer([[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 0], [1, 1, 1, 1, 1, 0], [0, 0, 0, 0, 0, 0], [0, 1, 1, 1, 1, 1], [0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 0, 0]])
 # print answer([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+# print answer([[0, 0, 0, 0], [0, 1, 1, 1], [0, 0, 0, 0]])
+print answer([[0, 1, 0, 0, 0, 0], [1, 1, 0, 0, 1, 0]])
+
+# generate_mazes()
 
 print("--- %s seconds ---" % (time.time() - start_time))
