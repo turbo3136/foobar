@@ -1,14 +1,25 @@
-def operate(str, count):
+def operate(bin_str):
     # if the string ends in 0, remove the last element and add 1 to count
     # if the string ends in 1, decide if we should add 1 or subtract 1
     #       if the len(str) == 2, add 2 to count and end the loop
     #       else, look at the second to last element, if it's 1 add 1, if it's 0 subtract 1
+    if bin_str == '1':
+        return ''
+
+    elif bin_str[-1] == '0':
+        bin_str = bin_str[0:-1]
+        return operate(bin_str) + '1'
+
+    return bin_str
 
 
 def answer(n):
     bin_str = str(bin(int(n)))[2:]
+    count = 0
+    ret = operate(bin_str)
 
-    ret = bin_str
+
+    # ret = bin_str
     return ret
 
 
